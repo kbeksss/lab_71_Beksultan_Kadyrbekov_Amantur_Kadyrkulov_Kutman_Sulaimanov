@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
-import {deleteDish, fetchDishes, postDish, postDishChanges} from "../../store/actionCreators/dishes";
+import {deleteDish, fetchDishes, postDish, postDishChanges} from "../../store/actionCreators/dishesActions";
 import {Button, Spinner, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import Dish from "../../components/Dish/Dish";
 import DishForm from "../../components/DishForm/DishForm";
@@ -13,6 +13,7 @@ const initialDish = {
 const Dishes = props => {
     const [modal, toggleModal] = useState(false);
     const [dish, setDish] = useState(initialDish);
+    const [dishId, setDishId] = useState('');
     const [editing, setEditing] = useState(false);
     const closeModal = () => {
         toggleModal(false);
@@ -27,7 +28,7 @@ const Dishes = props => {
     const submitDish = async e => {
         e.preventDefault();
         if(editing){
-            await props.postChanges(dish.id, dish);
+            await props.postChanges(dishId, dish);
             setDish(initialDish);
             setEditing(false);
         } else{
@@ -39,6 +40,7 @@ const Dishes = props => {
     const editDish = id => {
         setEditing(true);
         const currentDish = {...props.dishes[id]};
+        setDishId(id);
         setDish(currentDish);
         toggleModal(true);
     };
@@ -53,7 +55,7 @@ const Dishes = props => {
                 <Button color='primary' onClick={() => toggleModal(true)}>Add new Dish</Button>
             </div>
             <div className='mt-5'>
-                {!props.loading ? Object.keys(props.dishes).map(dish => (
+                {!props.loading ? props.dishes && Object.keys(props.dishes).map(dish => (
                     <Dish
                         editDish={() => editDish(dish)}
                         removeDish={() => props.removeDish(dish)}

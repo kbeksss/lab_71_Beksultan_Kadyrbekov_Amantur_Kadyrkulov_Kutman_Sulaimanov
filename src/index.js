@@ -9,10 +9,12 @@ import {Provider} from "react-redux";
 import thunk from 'redux-thunk';
 import * as serviceWorker from './serviceWorker';
 import dishesReducer from "./store/reducers/dishesReducer";
+import ordersReducer from "./store/reducers/ordersReducer";
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
-    dishes: dishesReducer
+    dishes: dishesReducer,
+    orders: ordersReducer
 });
 const store = createStore(
     rootReducer,
