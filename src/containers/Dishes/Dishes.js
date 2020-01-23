@@ -14,6 +14,10 @@ const Dishes = props => {
     const [modal, toggleModal] = useState(false);
     const [dish, setDish] = useState(initialDish);
     const [editing, setEditing] = useState(false);
+    const closeModal = () => {
+        toggleModal(false);
+        setDish(initialDish);
+    };
     const inputChange = (event) => {
         setDish({
             ...dish,
@@ -25,15 +29,16 @@ const Dishes = props => {
         if(editing){
             await props.postChanges(dish.id, dish);
             setDish(initialDish);
+            setEditing(false);
         } else{
             await props.postDish(dish);
         }
-        toggleModal(false);
+        closeModal();
         props.fetchDishes();
     };
     const editDish = id => {
         setEditing(true);
-        const [currentDish] = props.dishes.filter(d => d.id === id);
+        const currentDish = {...props.dishes[id]};
         setDish(currentDish);
         toggleModal(true);
     };
@@ -48,19 +53,19 @@ const Dishes = props => {
                 <Button color='primary' onClick={() => toggleModal(true)}>Add new Dish</Button>
             </div>
             <div className='mt-5'>
-                {!props.loading ? props.dishes.map(dish => (
+                {!props.loading ? Object.keys(props.dishes).map(dish => (
                     <Dish
-                        editDish={() => editDish(dish.id)}
+                        editDish={() => editDish(dish)}
                         removeDish={() => props.removeDish(dish)}
-                        key={dish.id}
-                        title={dish.title}
-                        image={dish.img}
-                        price={dish.price}
+                        key={dish}
+                        title={props.dishes[dish].title}
+                        image={props.dishes[dish].img}
+                        price={props.dishes[dish].price}
                     />
                 )): <Spinner/>}
             </div>
-            <Modal isOpen={modal} toggle={() => toggleModal(!modal)}>
-                <ModalHeader toggle={() => toggleModal(!modal)}>{editing ? ('You are editing the dish') : ('You are adding a new Dish')}</ModalHeader>
+            <Modal isOpen={modal} toggle={closeModal}>
+                <ModalHeader toggle={closeModal}>{editing ? ('You are editing the dish') : ('You are adding a new Dish')}</ModalHeader>
                 <ModalBody>
                     {!props.sendLoading ? (
                         <DishForm
@@ -74,7 +79,7 @@ const Dishes = props => {
 
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="secondary" onClick={() => toggleModal(!modal)}>Cancel</Button>
+                    <Button color="secondary" onClick={closeModal}>Cancel</Button>
                 </ModalFooter>
             </Modal>
         </div>
@@ -89,6 +94,6 @@ const mapDispatchToProps = dispatch => ({
     fetchDishes: () => dispatch(fetchDishes()),
     postDish: dish => dispatch(postDish(dish)),
     postChanges: (id,dish) => dispatch(postDishChanges(id, dish)),
-    removeDish: dish => dispatch(deleteDish(dish)),
+    removeDish: id => dispatch(deleteDish(id)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Dishes);

@@ -62,12 +62,12 @@ const deleteDishRequest = () => ({type: DELETE_DISH_REQUEST});
 const deleteDishSuccess = id => ({type: DELETE_DISH_SUCCESS, id});
 const deleteDishError = () => ({type: DELETE_DISH_ERROR});
 
-export const deleteDish = dish => {
+export const deleteDish = id => {
     return async dispatch => {
         dispatch(deleteDishRequest());
         try{
-            await axiosTurtle.delete('dishes/' + dish.id + '.json');
-            dispatch(deleteDishSuccess(dish.id));
+            await axiosTurtle.delete('dishes/' + id + '.json');
+            dispatch(deleteDishSuccess(id));
         } catch (e){
             console.error('Error while deleting the dish');
             dispatch(deleteDishError());

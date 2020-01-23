@@ -8,7 +8,7 @@ import {
 } from "../actionCreators/actionTypes";
 
 const initialState = {
-    allDishes: [],
+    allDishes: {},
     loading: false,
     sendLoading: false,
 };
@@ -19,7 +19,7 @@ const dishesReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                allDishes: Object.keys(action.dishes).map(dish => ({...action.dishes[dish], id: dish})),
+                allDishes: {...action.dishes},
             };
         case FETCH_DISHES_REQUEST:
             return {
@@ -47,13 +47,12 @@ const dishesReducer = (state = initialState, action) => {
                 sendLoading: false,
             };
         case DELETE_DISH_REQUEST:
-            console.log('request');
             return state;
         case DELETE_DISH_SUCCESS:
-            console.log('delete');
+            const [cleanSubject] = Object.keys(state.allDishes).filter(dish => dish !== action.id).map(dish => ({[dish]: state.allDishes[dish]}));
             return {
                 ...state,
-                allDishes: state.allDishes.filter(dish => dish.id !== action.id),
+                allDishes: cleanSubject,
             };
         default:
             return state;
