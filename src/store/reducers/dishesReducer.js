@@ -49,10 +49,11 @@ const dishesReducer = (state = initialState, action) => {
         case DELETE_DISH_REQUEST:
             return state;
         case DELETE_DISH_SUCCESS:
-            const [cleanSubject] = Object.keys(state.allDishes).filter(dish => dish !== action.id).map(dish => ({[dish]: state.allDishes[dish]}));
+            let newDishes = {...state.allDishes};
+            delete newDishes[action.id];
             return {
                 ...state,
-                allDishes: cleanSubject,
+                allDishes: newDishes,
             };
         default:
             return state;

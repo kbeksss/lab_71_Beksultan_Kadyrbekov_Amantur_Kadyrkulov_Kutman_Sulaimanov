@@ -25,7 +25,7 @@ const Order = props => {
             <ListGroup className='col-5'>
                 <ListGroupItem className="justify-content-between">Order Total:</ListGroupItem>
                 <ListGroupItem className="justify-content-between text-center"><Badge className='w-50 py-2' pill>{total + DELIVERY}</Badge></ListGroupItem>
-                <ListGroupItem className="justify-content-between text-center"><Button color='primary'> Complete Order</Button></ListGroupItem>
+                <ListGroupItem className="justify-content-between text-center"><Button onClick={props.onDelete} color='primary'> Complete Order</Button></ListGroupItem>
             </ListGroup>
         </div>
     );

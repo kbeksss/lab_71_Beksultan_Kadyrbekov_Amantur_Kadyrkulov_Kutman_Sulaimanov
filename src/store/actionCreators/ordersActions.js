@@ -1,4 +1,9 @@
-import {FETCH_ORDERS_ERROR, FETCH_ORDERS_REQUEST, FETCH_ORDERS_SUCCESS} from "./actionTypes";
+import {
+    DELETE_ORDER_SUCCESS,
+    FETCH_ORDERS_ERROR,
+    FETCH_ORDERS_REQUEST,
+    FETCH_ORDERS_SUCCESS
+} from "./actionTypes";
 import axiosTurtle from "../../axios-dishes";
 
 const fetchOrdersRequest = () => ({type: FETCH_ORDERS_REQUEST});
@@ -15,6 +20,19 @@ export const fetchOrders = () => {
         } catch (e) {
             console.error('Error while getting orders');
             dispatch(fetchOrdersError());
+        }
+    }
+};
+
+const deleteOrderSuccess = id => ({type: DELETE_ORDER_SUCCESS, id});
+
+export const deleteOrder = id => {
+    return async dispatch => {
+        try{
+            await axiosTurtle.delete('orders/' + id + '.json');
+            dispatch(deleteOrderSuccess(id));
+        } catch (e) {
+            console.error('Error while deleting the order');
         }
     }
 };

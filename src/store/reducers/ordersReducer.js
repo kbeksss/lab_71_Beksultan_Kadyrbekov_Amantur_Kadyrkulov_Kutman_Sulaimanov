@@ -1,4 +1,9 @@
-import {FETCH_ORDERS_ERROR, FETCH_ORDERS_REQUEST, FETCH_ORDERS_SUCCESS} from "../actionCreators/actionTypes";
+import {
+    DELETE_ORDER_SUCCESS,
+    FETCH_ORDERS_ERROR,
+    FETCH_ORDERS_REQUEST,
+    FETCH_ORDERS_SUCCESS
+} from "../actionCreators/actionTypes";
 
 const initialState = {
     orders: {},
@@ -22,6 +27,13 @@ const ordersReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
+            };
+        case DELETE_ORDER_SUCCESS:
+            let newOrders = {...state.orders};
+            delete newOrders[action.id];
+            return {
+                ...state,
+                orders: newOrders,
             };
         default:
             return state;
